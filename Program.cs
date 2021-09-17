@@ -24,15 +24,16 @@ namespace dotnet_ffmpeg_console
       };
       using (var process = new Process())
       {
-        var start = DateTime.Now;
+        var stopwatch = Stopwatch.StartNew();
         process.StartInfo = psi;
         process.Start();
         process.WaitForExit();
+        stopwatch.Stop();
 
         if(process.ExitCode == 0)
         {
-          var totalTime = start - DateTime.Now;
-          Console.WriteLine($"Video conversion complete {totalTime}");
+          var elapsedTime = stopwatch.Elapsed;
+          Console.WriteLine($"Video conversion complete {elapsedTime.ToString(@"hh\:mm\:ss\.fff")}");
         } 
         else 
         {
