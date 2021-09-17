@@ -22,7 +22,24 @@ namespace dotnet_ffmpeg_console
       {
         Arguments = argStr
       };
-      Process.Start(psi);
+      using (var process = new Process())
+      {
+        var start = DateTime.Now;
+        process.StartInfo = psi;
+        process.Start();
+        process.WaitForExit();
+
+        if(process.ExitCode == 0)
+        {
+          var totalTime = start - DateTime.Now;
+          Console.WriteLine($"Video conversion complete {totalTime}");
+        } 
+        else 
+        {
+          Console.WriteLine("Error");
+        }
+        //Process.Start(psi);
+      }
     }
   }
 }
