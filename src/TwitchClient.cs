@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -6,6 +7,44 @@ using Newtonsoft.Json;
 
 namespace dotnet_ffmpeg_console 
 {
+
+  public class VideoDTO 
+  {
+    public string id { get; set; }
+    public string stream_id { get; set; }
+    public string user_id { get; set; }
+    public string user_login { get; set; }
+    public string user_name { get; set; }
+    public string title { get; set; }
+    public string description { get; set; }
+    public DateTime created_at { get; set; }
+    public DateTime published_at { get; set; }
+    public string url { get; set; }
+    public string thumbnail_url { get; set; }
+    public string viewable { get; set; }
+    public int view_count { get; set; }
+    public string language { get; set; }
+    public string type { get; set; }
+    public string duration { get; set; }
+    public List<MutedSegment> muted_segments { get; set; } 
+
+  }
+  public class MutedSegment
+  {
+    public int duration {get;set;}
+    public int offset {get;set;}
+  }
+
+  public class Pagination
+  {
+    public string cursor {get;set;}
+  }
+
+  public class GetVideosResponse
+  {
+    public List<VideoDTO> data {get;set;}
+    public Pagination pagination {get;set;}
+  }
   public class TwitchClient
   {
     private string client_id; 
@@ -18,7 +57,7 @@ namespace dotnet_ffmpeg_console
       client_secret = config["twitch_client_secret"];
     }
 
-    public string GetVideosForUsername(string username) 
+    public ICollection<VideoDTO> GetVideosForUsername(string username) 
     {
       var userId = GetUserIDFromUsername(username);
       var url = $"https://api.twitch.tv/helix/videos?user_id={userId}";
@@ -30,8 +69,9 @@ namespace dotnet_ffmpeg_console
         client.DefaultRequestHeaders.Add("Client-Id", client_id);
         var resp = client.GetAsync(url).Result;
         respText = resp.Content.ReadAsStringAsync().Result;
+        var respParsed = JsonConvert.DeserializeObject<GetVideosResponse>(respText);
+        return respParsed.data;
       }
-      return respText;
     }
 
 

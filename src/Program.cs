@@ -1,6 +1,7 @@
 ﻿
 using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace dotnet_ffmpeg_console
 {
@@ -12,13 +13,19 @@ namespace dotnet_ffmpeg_console
 
     static void Main(string[] args)
     {
-//      var videoConverter = new VideoConverter(exampleFilePath, outputPath);
-//      videoConverter.ConvertVideo();
-        var twitchClient = new TwitchClient();
-        var videos = twitchClient.GetVideosForUsername("theprimeagen");
-        var parsedJson = JsonConvert.DeserializeObject(videos);
+      if(args.Length == 0) {
+        Console.WriteLine("No argument ffs");
+        return;
+      }
+      //      var videoConverter = new VideoConverter(exampleFilePath, outputPath);
+      //      videoConverter.ConvertVideo();
+      var twitchClient = new TwitchClient();
+      var videos = twitchClient.GetVideosForUsername(args[0]);
 
-        Console.WriteLine(JsonConvert.SerializeObject(parsedJson, Formatting.Indented));
+      foreach(var video in videos) 
+      {
+        Console.WriteLine($"Title: '{video.title}' Broadcasted: '{video.created_at}'");
+      }
     }
   }
 }
