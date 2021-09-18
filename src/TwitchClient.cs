@@ -154,6 +154,23 @@ namespace dotnet_ffmpeg_console
       }
     }
 
+    private T MakePostRequest<T>(HttpClient client, string url, string data, bool authenticated = true) where T : TwitchResponse
+    {
+      if(authenticated)
+      {
+        var token = GetToken();
+        if(token == null || token.Length == 0) {
+          throw new Exception("No token ffs");
+        }
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        client.DefaultRequestHeaders.Add("Client-Id", client_id);
+      }
+      var resp = client.PostAsync(url, new StringContent(data, Encoding.UTF8, "application/json")).Result;
+      var respContent = resp.Content.ReadAsStringAsync().Result;
+      var respParsed = JsonConvert.DeserializeObject<T>(respContent);
+      return respParsed;
+    }
+
     private T MakeGetRequest<T>(HttpClient client, string url, bool authenticated = true)  where T : TwitchResponse
     {
       var token = GetToken();
@@ -190,9 +207,10 @@ namespace dotnet_ffmpeg_console
       using(var client = GetHttpClient())
       {
         var authUrl = $"https://id.twitch.tv/oauth2/token?client_id={client_id}&client_secret={client_secret}&grant_type=client_credentials";
-        var resp = client.PostAsync(authUrl, new StringContent("", Encoding.UTF8, "application/json")).Result;
-        var respContent = resp.Content.ReadAsStringAsync().Result;
-        var respParsed = JsonConvert.DeserializeObject<GetAccessTokenResponse>(respContent);
+//        var resp = client.PostAsync(authUrl, new StringContent("", Encoding.UTF8, "application/json")).Result;
+//        var respContent = resp.Content.ReadAsStringAsync().Result;
+//        var respParsed = JsonConvert.DeserializeObject<GetAccessTokenResponse>(respContent);
+        var respParsed = MakePostRequest<GetAccessTokenResponse>(client, authUrl, "", false);
         _token = respParsed.AccessToken;
         _expiration = DateTime.Now.AddSeconds(respParsed.ExpiresIn);
         return _token;
