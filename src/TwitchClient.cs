@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
-namespace dotnet_ffmpeg_console 
+namespace Convertara.ConsoleApp
 {
 
   public class GetAccessTokenResponse : TwitchResponse
@@ -207,9 +207,6 @@ namespace dotnet_ffmpeg_console
       using(var client = GetHttpClient())
       {
         var authUrl = $"https://id.twitch.tv/oauth2/token?client_id={client_id}&client_secret={client_secret}&grant_type=client_credentials";
-//        var resp = client.PostAsync(authUrl, new StringContent("", Encoding.UTF8, "application/json")).Result;
-//        var respContent = resp.Content.ReadAsStringAsync().Result;
-//        var respParsed = JsonConvert.DeserializeObject<GetAccessTokenResponse>(respContent);
         var respParsed = MakePostRequest<GetAccessTokenResponse>(client, authUrl, "", false);
         _token = respParsed.AccessToken;
         _expiration = DateTime.Now.AddSeconds(respParsed.ExpiresIn);

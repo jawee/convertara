@@ -3,7 +3,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace dotnet_ffmpeg_console
+namespace Convertara.ConsoleApp
 {
   public class Program
   {
