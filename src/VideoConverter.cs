@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 
 namespace dotnet_ffmpeg_console
 {
@@ -17,7 +18,11 @@ namespace dotnet_ffmpeg_console
 
     public bool ConvertVideo()
     {
-      File.Delete(_outputPath);
+      Console.WriteLine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+      if(File.Exists(_outputPath))
+      {
+        File.Delete(_outputPath);
+      }
       var argStr = $"-i {_inputPath} -vcodec libx265 -crf 28 -r 30 {_outputPath}";
 
       var psi = new ProcessStartInfo(ffmpegPath)
