@@ -1,12 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace dotnet_ffmpeg_console 
 {
+
+  public class GetAccessTokenResponse
+  {
+    public string access_token { get; set; }
+    public string refresh_token { get; set; }
+    public int expires_in { get; set; }
+    public List<string> scope { get; set; }
+    public string token_type { get; set; }
+  }
 
   public class VideoDTO 
   {
@@ -45,6 +56,49 @@ namespace dotnet_ffmpeg_console
     public List<VideoDTO> data {get;set;}
     public Pagination pagination {get;set;}
   }
+
+  public class UserDTO 
+  {
+    [JsonPropertyName("id")]
+    public string Id { get; set; }
+
+    [JsonPropertyName("login")]
+    public string Login { get; set; }
+
+    [JsonPropertyName("display_name")]
+    public string DisplayName { get; set; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; set; }
+
+    [JsonPropertyName("broadcaster_type")]
+    public string BroadcasterType { get; set; }
+
+    [JsonPropertyName("description")]
+    public string Description { get; set; }
+
+    [JsonPropertyName("profile_image_url")]
+    public string ProfileImageUrl { get; set; }
+
+    [JsonPropertyName("offline_image_url")]
+    public string OfflineImageUrl { get; set; }
+
+    [JsonPropertyName("view_count")]
+    public int ViewCount { get; set; }
+
+    [JsonPropertyName("email")]
+    public string Email { get; set; }
+
+    [JsonPropertyName("created_at")]
+    public DateTime CreatedAt { get; set; }
+  }
+
+  public class GetUsersResponse
+  {
+    [JsonPropertyName("data")]
+    public List<UserDTO> Data {get;set;}
+  }
+
   public class TwitchClient
   {
     private string client_id; 
@@ -82,8 +136,6 @@ namespace dotnet_ffmpeg_console
       client.DefaultRequestHeaders.Add("Client-Id", client_id);
     }
 
-
-
     private string GetUserIDFromUsername(string username) 
     {
       var url = $"https://api.twitch.tv/helix/users?login={username}";
@@ -93,9 +145,9 @@ namespace dotnet_ffmpeg_console
         AddAuthHeadersToClient(client);
         var resp = client.GetAsync(url).Result;
         var respContent = resp.Content.ReadAsStringAsync().Result;
-        var respParsed = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(respContent);
+        var respParsed = JsonConvert.DeserializeObject<GetUsersResponse>(respContent);
 
-        userId = respParsed["data"][0]["id"];
+        userId = respParsed.Data.First().Id;
       }
       return userId;
     }
@@ -112,9 +164,9 @@ namespace dotnet_ffmpeg_console
         var authUrl = $"https://id.twitch.tv/oauth2/token?client_id={client_id}&client_secret={client_secret}&grant_type=client_credentials";
         var resp = client.PostAsync(authUrl, new StringContent("", Encoding.UTF8, "application/json")).Result;
         var respContent = resp.Content.ReadAsStringAsync().Result;
-        var respParsed = JsonConvert.DeserializeObject<Dictionary<string, string>>(respContent);
-        _token = respParsed["access_token"];
-        _expiration = DateTime.Now.AddSeconds(int.Parse(respParsed["expires_in"]));
+        var respParsed = JsonConvert.DeserializeObject<GetAccessTokenResponse>(respContent);
+        _token = respParsed.access_token;
+        _expiration = DateTime.Now.AddSeconds(respParsed.expires_in);
         return _token;
       }
     }
