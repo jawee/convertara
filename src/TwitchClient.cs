@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace dotnet_ffmpeg_console 
 {
 
-  public class GetAccessTokenResponse
+  public class GetAccessTokenResponse : TwitchResponse
   {
     [JsonProperty("access_token")]
     public string AccessToken { get; set; }
@@ -76,7 +75,7 @@ namespace dotnet_ffmpeg_console
     public string Cursor {get;set;}
   }
 
-  public class GetVideosResponse
+  public class GetVideosResponse : TwitchResponse
   {
     [JsonProperty("data")]
     public List<VideoDTO> Data {get;set;}
@@ -120,10 +119,14 @@ namespace dotnet_ffmpeg_console
     public DateTime CreatedAt { get; set; }
   }
 
-  public class GetUsersResponse
+  public class GetUsersResponse : TwitchResponse
   {
     [JsonProperty("data")]
     public List<UserDTO> Data {get;set;}
+  }
+
+  public interface TwitchResponse
+  {
   }
 
   public class TwitchClient
@@ -144,26 +147,24 @@ namespace dotnet_ffmpeg_console
     {
       var userId = GetUserIDFromUsername(username);
       var url = $"https://api.twitch.tv/helix/videos?user_id={userId}";
-      var respText = "";
       using(var client = GetHttpClient())
       {
-        var token = GetToken();
-        if(token == null || token.Length == 0) {
-          throw new Exception("No token ffs");
-        }
-        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-        client.DefaultRequestHeaders.Add("Client-Id", client_id);
-        var resp = client.GetAsync(url).Result;
-        respText = resp.Content.ReadAsStringAsync().Result;
-        var respParsed = JsonConvert.DeserializeObject<GetVideosResponse>(respText);
+        var respParsed = MakeGetRequest<GetVideosResponse>(client, url);
         return respParsed.Data;
       }
     }
 
-    private object MakeGetRequest(HttpClient client, string url) 
+    private T MakeGetRequest<T>(HttpClient client, string url, bool authenticated = true)  where T : TwitchResponse
     {
-      //TODO make generic method
-      throw new NotImplementedException();
+      var token = GetToken();
+      if(token == null || token.Length == 0) {
+        throw new Exception("No token ffs");
+      }
+      client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+      client.DefaultRequestHeaders.Add("Client-Id", client_id);
+      var resp = client.GetAsync(url).Result;
+      var respParsed = JsonConvert.DeserializeObject<T>(resp.Content.ReadAsStringAsync().Result);
+      return respParsed;
     }
 
     private string GetUserIDFromUsername(string username) 
@@ -172,15 +173,7 @@ namespace dotnet_ffmpeg_console
       var userId = "";
       using(var client = GetHttpClient())
       {
-        var token = GetToken();
-        if(token == null || token.Length == 0) {
-          throw new Exception("No token ffs");
-        }
-        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-        client.DefaultRequestHeaders.Add("Client-Id", client_id);
-        var resp = client.GetAsync(url).Result;
-        var respContent = resp.Content.ReadAsStringAsync().Result;
-        var respParsed = JsonConvert.DeserializeObject<GetUsersResponse>(respContent);
+        var respParsed = MakeGetRequest<GetUsersResponse>(client, url);
 
         userId = respParsed.Data.First().Id;
       }
