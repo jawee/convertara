@@ -24,7 +24,7 @@ namespace dotnet_ffmpeg_console
 
       foreach(var video in videos) 
       {
-        Console.WriteLine($"Title: '{video.title}' Broadcasted: '{video.created_at}'");
+        Console.WriteLine($"Title: '{video.Title}' Broadcasted: '{video.CreatedAt}'");
       }
     }
   }

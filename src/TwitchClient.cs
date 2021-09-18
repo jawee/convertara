@@ -12,90 +12,117 @@ namespace dotnet_ffmpeg_console
 
   public class GetAccessTokenResponse
   {
-    public string access_token { get; set; }
-    public string refresh_token { get; set; }
-    public int expires_in { get; set; }
-    public List<string> scope { get; set; }
-    public string token_type { get; set; }
+    [JsonProperty("access_token")]
+    public string AccessToken { get; set; }
+    [JsonProperty("refresh_token")]
+    public string RefreshToken { get; set; }
+    [JsonProperty("expires_in")]
+    public int ExpiresIn { get; set; }
+    [JsonProperty("scope")]
+    public List<string> Scope { get; set; }
+    [JsonProperty("token_type")]
+    public string TokenType { get; set; }
   }
 
   public class VideoDTO 
   {
-    public string id { get; set; }
-    public string stream_id { get; set; }
-    public string user_id { get; set; }
-    public string user_login { get; set; }
-    public string user_name { get; set; }
-    public string title { get; set; }
-    public string description { get; set; }
-    public DateTime created_at { get; set; }
-    public DateTime published_at { get; set; }
-    public string url { get; set; }
-    public string thumbnail_url { get; set; }
-    public string viewable { get; set; }
-    public int view_count { get; set; }
-    public string language { get; set; }
-    public string type { get; set; }
-    public string duration { get; set; }
-    public List<MutedSegment> muted_segments { get; set; } 
+    [JsonProperty("id")]
+    public string Id { get; set; }
+    [JsonProperty("stream_id")]
+    public string StreamId { get; set; }
+    [JsonProperty("user_id")]
+    public string UserId { get; set; }
+    [JsonProperty("user_login")]
+    public string UserLogin { get; set; }
+    [JsonProperty("user_name")]
+    public string UserName { get; set; }
+    [JsonProperty("title")]
+    public string Title { get; set; }
+    [JsonProperty("description")]
+    public string Description { get; set; }
+    [JsonProperty("created_at")]
+    public DateTime CreatedAt { get; set; }
+    [JsonProperty("published_at")]
+    public DateTime PublishedAt { get; set; }
+    [JsonProperty("url")]
+    public string Url { get; set; }
+    [JsonProperty("thumbnail_url")]
+    public string ThumbnailUrl { get; set; }
+    [JsonProperty("viewable")]
+    public string Viewable { get; set; }
+    [JsonProperty("view_count")]
+    public int ViewCount { get; set; }
+    [JsonProperty("language")]
+    public string Language { get; set; }
+    [JsonProperty("type")]
+    public string Type { get; set; }
+    [JsonProperty("duration")]
+    public string Duration { get; set; }
+    [JsonProperty("muted_segments")]
+    public List<MutedSegment> MutedSegments { get; set; } 
 
   }
   public class MutedSegment
   {
-    public int duration {get;set;}
-    public int offset {get;set;}
+    [JsonProperty("duration")]
+    public int Duration {get;set;}
+    [JsonProperty("offset")]
+    public int Offset {get;set;}
   }
 
   public class Pagination
   {
-    public string cursor {get;set;}
+    [JsonProperty("cursor")]
+    public string Cursor {get;set;}
   }
 
   public class GetVideosResponse
   {
-    public List<VideoDTO> data {get;set;}
-    public Pagination pagination {get;set;}
+    [JsonProperty("data")]
+    public List<VideoDTO> Data {get;set;}
+    [JsonProperty("pagination")]
+    public Pagination Pagination {get;set;}
   }
 
   public class UserDTO 
   {
-    [JsonPropertyName("id")]
+    [JsonProperty("id")]
     public string Id { get; set; }
 
-    [JsonPropertyName("login")]
+    [JsonProperty("login")]
     public string Login { get; set; }
 
-    [JsonPropertyName("display_name")]
+    [JsonProperty("display_name")]
     public string DisplayName { get; set; }
 
-    [JsonPropertyName("type")]
+    [JsonProperty("type")]
     public string Type { get; set; }
 
-    [JsonPropertyName("broadcaster_type")]
+    [JsonProperty("broadcaster_type")]
     public string BroadcasterType { get; set; }
 
-    [JsonPropertyName("description")]
+    [JsonProperty("description")]
     public string Description { get; set; }
 
-    [JsonPropertyName("profile_image_url")]
+    [JsonProperty("profile_image_url")]
     public string ProfileImageUrl { get; set; }
 
-    [JsonPropertyName("offline_image_url")]
+    [JsonProperty("offline_image_url")]
     public string OfflineImageUrl { get; set; }
 
-    [JsonPropertyName("view_count")]
+    [JsonProperty("view_count")]
     public int ViewCount { get; set; }
 
-    [JsonPropertyName("email")]
+    [JsonProperty("email")]
     public string Email { get; set; }
 
-    [JsonPropertyName("created_at")]
+    [JsonProperty("created_at")]
     public DateTime CreatedAt { get; set; }
   }
 
   public class GetUsersResponse
   {
-    [JsonPropertyName("data")]
+    [JsonProperty("data")]
     public List<UserDTO> Data {get;set;}
   }
 
@@ -103,7 +130,6 @@ namespace dotnet_ffmpeg_console
   {
     private string client_id; 
     private string client_secret;
-
     private string _token;
     private DateTime _expiration;
 
@@ -121,19 +147,23 @@ namespace dotnet_ffmpeg_console
       var respText = "";
       using(var client = GetHttpClient())
       {
-        AddAuthHeadersToClient(client);
+        var token = GetToken();
+        if(token == null || token.Length == 0) {
+          throw new Exception("No token ffs");
+        }
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        client.DefaultRequestHeaders.Add("Client-Id", client_id);
         var resp = client.GetAsync(url).Result;
         respText = resp.Content.ReadAsStringAsync().Result;
         var respParsed = JsonConvert.DeserializeObject<GetVideosResponse>(respText);
-        return respParsed.data;
+        return respParsed.Data;
       }
     }
 
-    private void AddAuthHeadersToClient(HttpClient client) 
+    private object MakeGetRequest(HttpClient client, string url) 
     {
-      var token = GetToken();
-      client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-      client.DefaultRequestHeaders.Add("Client-Id", client_id);
+      //TODO make generic method
+      throw new NotImplementedException();
     }
 
     private string GetUserIDFromUsername(string username) 
@@ -142,7 +172,12 @@ namespace dotnet_ffmpeg_console
       var userId = "";
       using(var client = GetHttpClient())
       {
-        AddAuthHeadersToClient(client);
+        var token = GetToken();
+        if(token == null || token.Length == 0) {
+          throw new Exception("No token ffs");
+        }
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        client.DefaultRequestHeaders.Add("Client-Id", client_id);
         var resp = client.GetAsync(url).Result;
         var respContent = resp.Content.ReadAsStringAsync().Result;
         var respParsed = JsonConvert.DeserializeObject<GetUsersResponse>(respContent);
@@ -165,8 +200,8 @@ namespace dotnet_ffmpeg_console
         var resp = client.PostAsync(authUrl, new StringContent("", Encoding.UTF8, "application/json")).Result;
         var respContent = resp.Content.ReadAsStringAsync().Result;
         var respParsed = JsonConvert.DeserializeObject<GetAccessTokenResponse>(respContent);
-        _token = respParsed.access_token;
-        _expiration = DateTime.Now.AddSeconds(respParsed.expires_in);
+        _token = respParsed.AccessToken;
+        _expiration = DateTime.Now.AddSeconds(respParsed.ExpiresIn);
         return _token;
       }
     }
