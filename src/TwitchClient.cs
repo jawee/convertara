@@ -50,6 +50,9 @@ namespace dotnet_ffmpeg_console
     private string client_id; 
     private string client_secret;
 
+    private string _token;
+    private DateTime _expiration;
+
     public TwitchClient()
     {
       var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
@@ -61,12 +64,10 @@ namespace dotnet_ffmpeg_console
     {
       var userId = GetUserIDFromUsername(username);
       var url = $"https://api.twitch.tv/helix/videos?user_id={userId}";
-      var token = GetToken();
       var respText = "";
-      using(var client = GetPublicApiClient())
+      using(var client = GetHttpClient())
       {
-        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-        client.DefaultRequestHeaders.Add("Client-Id", client_id);
+        AddAuthHeadersToClient(client);
         var resp = client.GetAsync(url).Result;
         respText = resp.Content.ReadAsStringAsync().Result;
         var respParsed = JsonConvert.DeserializeObject<GetVideosResponse>(respText);
@@ -74,17 +75,22 @@ namespace dotnet_ffmpeg_console
       }
     }
 
+    private void AddAuthHeadersToClient(HttpClient client) 
+    {
+      var token = GetToken();
+      client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+      client.DefaultRequestHeaders.Add("Client-Id", client_id);
+    }
+
+
 
     private string GetUserIDFromUsername(string username) 
     {
-
-      var token = GetToken();
       var url = $"https://api.twitch.tv/helix/users?login={username}";
       var userId = "";
-      using(var client = GetPublicApiClient())
+      using(var client = GetHttpClient())
       {
-        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-        client.DefaultRequestHeaders.Add("Client-Id", client_id);
+        AddAuthHeadersToClient(client);
         var resp = client.GetAsync(url).Result;
         var respContent = resp.Content.ReadAsStringAsync().Result;
         var respParsed = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(respContent);
@@ -96,20 +102,25 @@ namespace dotnet_ffmpeg_console
 
     private string GetToken() 
     {
-      using(var client = GetPublicApiClient())
+      if(_token != null && _expiration > DateTime.Now.AddMinutes(1))
+      {
+        return _token;
+      }
+
+      using(var client = GetHttpClient())
       {
         var authUrl = $"https://id.twitch.tv/oauth2/token?client_id={client_id}&client_secret={client_secret}&grant_type=client_credentials";
         var resp = client.PostAsync(authUrl, new StringContent("", Encoding.UTF8, "application/json")).Result;
         var respContent = resp.Content.ReadAsStringAsync().Result;
         var respParsed = JsonConvert.DeserializeObject<Dictionary<string, string>>(respContent);
-
-        return respParsed["access_token"];
+        _token = respParsed["access_token"];
+        _expiration = DateTime.Now.AddSeconds(int.Parse(respParsed["expires_in"]));
+        return _token;
       }
     }
 
-    private HttpClient GetPublicApiClient()
+    private HttpClient GetHttpClient()
     {
-
       var hc = new HttpClient();
       return hc;
     }
