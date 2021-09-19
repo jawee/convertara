@@ -1,7 +1,6 @@
 ﻿
 using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Convertara.Core;
 
 namespace Convertara.ConsoleApp
 {
@@ -17,6 +16,7 @@ namespace Convertara.ConsoleApp
         Console.WriteLine("No argument ffs");
         return;
       }
+
       var videoConverter = new VideoConverter(exampleFilePath, outputPath);
       videoConverter.ConvertVideo();
       var twitchClient = new TwitchClient();

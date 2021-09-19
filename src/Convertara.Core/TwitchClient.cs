@@ -167,7 +167,6 @@ namespace Convertara.ConsoleApp
       }
       var resp = client.PostAsync(url, new StringContent(data, Encoding.UTF8, "application/json")).Result;
       var respContent = resp.Content.ReadAsStringAsync().Result;
-      Console.WriteLine(respContent);
       var respParsed = JsonConvert.DeserializeObject<T>(respContent);
       return respParsed;
     }
@@ -211,7 +210,6 @@ namespace Convertara.ConsoleApp
         var respParsed = MakePostRequest<GetAccessTokenResponse>(client, authUrl, "", false);
         _token = respParsed.AccessToken;
         _expiration = DateTime.Now.AddSeconds(respParsed.ExpiresIn);
-        Console.WriteLine($"Got token {_token}");
         return _token;
       }
     }

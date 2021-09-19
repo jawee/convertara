@@ -18,7 +18,6 @@ namespace Convertara.ConsoleApp
 
     public bool ConvertVideo()
     {
-      Console.WriteLine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
       if(File.Exists(_outputPath))
       {
         File.Delete(_outputPath);
@@ -26,7 +25,6 @@ namespace Convertara.ConsoleApp
 
       if(!File.Exists(ffmpegPath))
       {
-        Console.WriteLine("Cant find ffmpeg");
         throw new Exception("Cant find ffmpeg");
       }
       var argStr = $"-i {_inputPath} -vcodec libx265 -crf 28 -r 30 {_outputPath}";
