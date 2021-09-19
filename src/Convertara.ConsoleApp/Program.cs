@@ -7,8 +7,8 @@ namespace Convertara.ConsoleApp
 {
   public class Program
   {
-    private static string exampleFilePath = "./../example/example.mkv";
-    private static string outputPath = "./../output/output.mp4";
+    private static string exampleFilePath = "./example/example.mkv";
+    private static string outputPath = "./output/output.mp4";
 
 
     static void Main(string[] args)
@@ -17,8 +17,8 @@ namespace Convertara.ConsoleApp
         Console.WriteLine("No argument ffs");
         return;
       }
-      //      var videoConverter = new VideoConverter(exampleFilePath, outputPath);
-      //      videoConverter.ConvertVideo();
+      var videoConverter = new VideoConverter(exampleFilePath, outputPath);
+      videoConverter.ConvertVideo();
       var twitchClient = new TwitchClient();
       var videos = twitchClient.GetVideosForUsername(args[0]);
 

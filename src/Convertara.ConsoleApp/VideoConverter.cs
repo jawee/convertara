@@ -7,7 +7,7 @@ namespace Convertara.ConsoleApp
 {
   public class VideoConverter
   {
-    private static string ffmpegPath = "./lib/ffmpeg";
+    private static string ffmpegPath = "./src/lib/ffmpeg";
     private string _inputPath;
     private string _outputPath;
     public VideoConverter(string inputPath, string outputPath) 
@@ -23,12 +23,19 @@ namespace Convertara.ConsoleApp
       {
         File.Delete(_outputPath);
       }
+
+      if(!File.Exists(ffmpegPath))
+      {
+        Console.WriteLine("Cant find ffmpeg");
+        throw new Exception("Cant find ffmpeg");
+      }
       var argStr = $"-i {_inputPath} -vcodec libx265 -crf 28 -r 30 {_outputPath}";
 
       var psi = new ProcessStartInfo(ffmpegPath)
       {
         Arguments = argStr
       };
+
       using (var process = new Process())
       {
         var stopwatch = Stopwatch.StartNew();
