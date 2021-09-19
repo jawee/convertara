@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
-namespace Convertara.ConsoleApp
+namespace Convertara.Core
 {
 
   public class GetAccessTokenResponse : TwitchResponse

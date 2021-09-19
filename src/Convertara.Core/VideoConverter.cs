@@ -1,9 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 
-namespace Convertara.ConsoleApp
+namespace Convertara.Core
 {
   public class VideoConverter
   {
