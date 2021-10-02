@@ -24,12 +24,20 @@ namespace Convertara.Core
     private DateTime _expiration;
     private HttpClient _httpClient;
 
-    public TwitchService(HttpClient httpClient = null)
+    public TwitchService()
     {
       var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
       _client_id = config["twitch_client_id"];
       _client_secret = config["twitch_client_secret"];
-      _httpClient = httpClient ?? new HttpClient();
+      _httpClient = new HttpClient();
+    }
+
+    //Constructor for testing
+    public TwitchService(HttpClient httpClient)
+    {
+      _client_id = "123424234";
+      _client_secret = "1234313132";
+      _httpClient = httpClient;
     }
 
     public ICollection<VideoDTO> GetVideosForUsername(string username) 
