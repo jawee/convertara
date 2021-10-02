@@ -35,7 +35,7 @@ namespace Convertara.Test
           twitchClient.GetVideosForUserId(It.IsAny<string>(), It.IsAny<string>()))
           .Returns(() => GetVideosResponse());
         
-      _twitchService = new TwitchService(mockTwitchClient.Object);
+      _twitchService = new TwitchService(mockTwitchClient.Object, "clientid", "clientsecret");
     }
 
     [Test]

@@ -25,11 +25,10 @@ namespace Convertara.Core
     private DateTime _expiration;
     private ITwitchClient _httpClient;
 
-    public TwitchService(ITwitchClient twitchClient)
+    public TwitchService(ITwitchClient twitchClient, string clientId, string clientSecret)
     {
-      var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-      _client_id = config["twitch_client_id"];
-      _client_secret = config["twitch_client_secret"];
+      _client_id = clientId;
+      _client_secret = clientSecret;
       _httpClient = twitchClient;
     }
 
