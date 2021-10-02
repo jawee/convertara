@@ -9,20 +9,31 @@ using Newtonsoft.Json;
 
 namespace Convertara.Core
 {
-
-
-  public class TwitchClient
+  public interface ITwitchService
   {
-    private string client_id; 
-    private string client_secret;
+    ICollection<VideoDTO> GetVideosForUsername(string username);
+    string GetToken();
+  }
+
+  public interface ITwitchClient 
+  {
+
+  }
+
+  public class TwitchService : ITwitchService
+  {
+    private string _client_id; 
+    private string _client_secret;
     private string _token;
     private DateTime _expiration;
+    private ITwitchClient _client;
 
-    public TwitchClient()
+    public TwitchService(ITwitchClient twitchClient)
     {
       var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-      client_id = config["twitch_client_id"];
-      client_secret = config["twitch_client_secret"];
+      _client_id = config["twitch_client_id"];
+      _client_secret = config["twitch_client_secret"];
+      _client = twitchClient;
     }
 
     public ICollection<VideoDTO> GetVideosForUsername(string username) 
@@ -45,7 +56,7 @@ namespace Convertara.Core
           throw new Exception("No token ffs");
         }
         client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-        client.DefaultRequestHeaders.Add("Client-Id", client_id);
+        client.DefaultRequestHeaders.Add("Client-Id", _client_id);
       }
       var resp = client.PostAsync(url, new StringContent(data, Encoding.UTF8, "application/json")).Result;
       var respContent = resp.Content.ReadAsStringAsync().Result;
@@ -60,13 +71,13 @@ namespace Convertara.Core
         throw new Exception("No token ffs");
       }
       client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-      client.DefaultRequestHeaders.Add("Client-Id", client_id);
+      client.DefaultRequestHeaders.Add("Client-Id", _client_id);
       var resp = client.GetAsync(url).Result;
       var respParsed = JsonConvert.DeserializeObject<T>(resp.Content.ReadAsStringAsync().Result);
       return respParsed;
     }
 
-    private string GetUserIDFromUsername(string username) 
+    public string GetUserIDFromUsername(string username) 
     {
       var url = $"https://api.twitch.tv/helix/users?login={username}";
       var userId = "";
@@ -79,7 +90,7 @@ namespace Convertara.Core
       return userId;
     }
 
-    private string GetToken() 
+    public string GetToken() 
     {
       if(_token != null && _expiration > DateTime.Now.AddMinutes(1))
       {
@@ -88,7 +99,7 @@ namespace Convertara.Core
 
       using(var client = GetHttpClient())
       {
-        var authUrl = $"https://id.twitch.tv/oauth2/token?client_id={client_id}&client_secret={client_secret}&grant_type=client_credentials";
+        var authUrl = $"https://id.twitch.tv/oauth2/token?client_id={_client_id}&client_secret={_client_secret}&grant_type=client_credentials";
         var respParsed = MakePostRequest<GetAccessTokenResponse>(client, authUrl, "", false);
         _token = respParsed.AccessToken;
         _expiration = DateTime.Now.AddSeconds(respParsed.ExpiresIn);
