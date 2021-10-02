@@ -3,7 +3,6 @@ using System;
 using Convertara.Core;
 using Convertara.Core.Clients;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 
 namespace Convertara.ConsoleApp
 {

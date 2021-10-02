@@ -1,14 +1,8 @@
 using NUnit.Framework;
 using Convertara.Core;
 using Moq;
-using System.Net.Http;
-using Moq.Protected;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Net;
 using Convertara.Core.DTO;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using Convertara.Core.Clients;
 using System;
 using System.Linq;
