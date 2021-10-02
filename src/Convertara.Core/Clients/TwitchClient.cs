@@ -29,7 +29,6 @@ namespace Convertara.Core.Clients
 
         public GetAccessTokenResponse GetToken(string clientId, string clientSecret)
         {
-            Console.WriteLine($"Getting access token {clientId} {clientSecret}");
             //TODO 1: This is ugly. Should require clientId to be passed with each request.
             _clientId = clientId; 
             var authUrl = $"https://id.twitch.tv/oauth2/token?client_id={clientId}&client_secret={clientSecret}&grant_type=client_credentials";
