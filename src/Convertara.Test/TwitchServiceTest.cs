@@ -6,6 +6,9 @@ using Moq.Protected;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Net;
+using Convertara.Core.DTO;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Convertara.Test
 {
@@ -15,6 +18,12 @@ namespace Convertara.Test
         [SetUp]
         public void Setup()
         {
+          var tokenResponse = new GetAccessTokenResponse();
+          tokenResponse.AccessToken = "asdfasdfa";
+          tokenResponse.ExpiresIn = 300;
+          tokenResponse.RefreshToken = "asdfasf";
+          tokenResponse.Scope = new List<string>{"scope1", "scope2"};
+          tokenResponse.TokenType = "client";
           var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
           handlerMock.Protected().Setup<Task<HttpResponseMessage>>(
               "SendAsync",
@@ -23,7 +32,7 @@ namespace Convertara.Test
               ).ReturnsAsync(new HttpResponseMessage() 
                 {
                   StatusCode = HttpStatusCode.OK,
-                  Content = new StringContent("{'access_token': 'asdfasdfa'}"),
+                  Content = new StringContent(JsonConvert.SerializeObject(tokenResponse)),
                   }).Verifiable();
 
           var httpClient = new HttpClient(handlerMock.Object);
