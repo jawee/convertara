@@ -30,13 +30,11 @@ pipeline {
       when {
         branch 'master'
       }
-      steps {
-        def scannerHome = tool 'SonarQubeMsBuild'
-        withSonarQubeEnv(installationName: 'SonarQubeMsBuild', credentialsId: 'SonarQubeToken') {
-          sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"Convertara\""
-          sh "dotnet build"
-          sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll end"
-        }
+      def scannerHome = tool 'SonarQubeMsBuild'
+      withSonarQubeEnv(installationName: 'SonarQubeMsBuild', credentialsId: 'SonarQubeToken') {
+        sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"Convertara\""
+        sh "dotnet build"
+        sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll end"
       }
     }
   }
