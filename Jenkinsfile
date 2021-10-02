@@ -1,4 +1,6 @@
-def scannerHome = tool 'SonarQubeMsBuild'
+environment {
+  scannerHome = tool 'SonarQubeMsBuild'
+}
 pipeline {
   agent any
   stages {
