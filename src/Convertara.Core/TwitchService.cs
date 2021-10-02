@@ -56,6 +56,7 @@ namespace Convertara.Core
         return _token;
       }
       var respParsed = _httpClient.GetToken(_client_id, _client_secret);
+      Console.WriteLine($"Setting token to {respParsed.AccessToken}");
       _token = respParsed.AccessToken;
       _expiration = DateTime.Now.AddSeconds(respParsed.ExpiresIn);
       return _token;

@@ -8,17 +8,15 @@ namespace Convertara.Core.Clients
 {
     public class TwitchClient : ITwitchClient
     {
-        private HttpClient _httpClient;
         private string _clientId;
 
         public TwitchClient()
         {
-            _httpClient = new HttpClient();
         }
         public GetVideosResponse GetVideosForUserId(string userId, string token)
         {
             var url = $"https://api.twitch.tv/helix/videos?user_id={userId}";
-            var respParsed = MakeGetRequest<GetVideosResponse>(url);
+            var respParsed = MakeGetRequest<GetVideosResponse>(url, token);
             return respParsed;
         }
 
@@ -31,6 +29,7 @@ namespace Convertara.Core.Clients
 
         public GetAccessTokenResponse GetToken(string clientId, string clientSecret)
         {
+            Console.WriteLine($"Getting access token {clientId} {clientSecret}");
             //TODO 1: This is ugly. Should require clientId to be passed with each request.
             _clientId = clientId; 
             var authUrl = $"https://id.twitch.tv/oauth2/token?client_id={clientId}&client_secret={clientSecret}&grant_type=client_credentials";
@@ -39,30 +38,37 @@ namespace Convertara.Core.Clients
         }
         private T MakePostRequest<T>(string url, string data, string token = null, bool authenticated = true) where T : ITwitchResponse
         {
-        if(authenticated)
-        {
-            if(token == null || token.Length == 0) {
-            throw new Exception("No token ffs");
+            using(var httpClient = new HttpClient())
+            {
+                if(authenticated)
+                {
+                    if(token == null || token.Length == 0) {
+                    throw new Exception("No token ffs in MakePostRequest");
+                    }
+                    httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+                    httpClient.DefaultRequestHeaders.Add("Client-Id", _clientId);
+                }
+                var resp = httpClient.PostAsync(url, new StringContent(data, Encoding.UTF8, "application/json")).Result;
+                var respContent = resp.Content.ReadAsStringAsync().Result;
+                var respParsed = JsonConvert.DeserializeObject<T>(respContent);
+                return respParsed;
             }
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-            _httpClient.DefaultRequestHeaders.Add("Client-Id", _clientId);
-        }
-        var resp = _httpClient.PostAsync(url, new StringContent(data, Encoding.UTF8, "application/json")).Result;
-        var respContent = resp.Content.ReadAsStringAsync().Result;
-        var respParsed = JsonConvert.DeserializeObject<T>(respContent);
-        return respParsed;
+        
         }
 
         private T MakeGetRequest<T>(string url, string token = null, bool authenticated = true)  where T : ITwitchResponse
         {
-        if(token == null || token.Length == 0) {
-            throw new Exception("No token ffs");
-        }
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-        _httpClient.DefaultRequestHeaders.Add("Client-Id", _clientId);
-        var resp = _httpClient.GetAsync(url).Result;
-        var respParsed = JsonConvert.DeserializeObject<T>(resp.Content.ReadAsStringAsync().Result);
-        return respParsed;
+            using(var httpClient = new HttpClient())
+            {
+                if(token == null || token.Length == 0) {
+                    throw new Exception("No token ffs in MakeGetRequest");
+                }
+                httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+                httpClient.DefaultRequestHeaders.Add("Client-Id", _clientId);
+                var resp = httpClient.GetAsync(url).Result;
+                var respParsed = JsonConvert.DeserializeObject<T>(resp.Content.ReadAsStringAsync().Result);
+                return respParsed;
+            }
         }
     }
 }

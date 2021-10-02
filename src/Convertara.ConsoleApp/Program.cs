@@ -1,6 +1,8 @@
 ﻿
 using System;
 using Convertara.Core;
+using Convertara.Core.Clients;
+using Newtonsoft.Json;
 
 namespace Convertara.ConsoleApp
 {
@@ -20,7 +22,8 @@ namespace Convertara.ConsoleApp
       var videoConverter = new VideoConverter(exampleFilePath, outputPath);
       videoConverter.ConvertVideo();
       var twitchClient = new TwitchClient();
-      var videos = twitchClient.GetVideosForUsername(args[0]);
+      var twitchService = new TwitchService(twitchClient);
+      var videos = twitchService.GetVideosForUsername(args[0]);
 
       foreach(var video in videos) 
       {
