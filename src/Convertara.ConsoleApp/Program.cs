@@ -1,6 +1,8 @@
 ﻿
 using System;
 using Convertara.Core;
+using Convertara.Core.Clients;
+using Microsoft.Extensions.Configuration;
 
 namespace Convertara.ConsoleApp
 {
@@ -17,10 +19,15 @@ namespace Convertara.ConsoleApp
         return;
       }
 
+      var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+      var clientId = config["twitch_client_id"];
+      var clientSecret = config["twitch_client_secret"];
+
       var videoConverter = new VideoConverter(exampleFilePath, outputPath);
       videoConverter.ConvertVideo();
       var twitchClient = new TwitchClient();
-      var videos = twitchClient.GetVideosForUsername(args[0]);
+      var twitchService = new TwitchService(twitchClient, clientId, clientSecret);
+      var videos = twitchService.GetVideosForUsername(args[0]);
 
       foreach(var video in videos) 
       {
