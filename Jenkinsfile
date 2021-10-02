@@ -26,5 +26,18 @@ pipeline {
       }
     }
 
+    stage('SonarQube Analysis') {
+      when {
+        branch 'master'
+      }
+      steps {
+        def scannerHome = tool 'SonarScanner for MSBuild'
+        withSonarQubeEnv() {
+          sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"Convertara\""
+          sh "dotnet build"
+          sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll end"
+        }
+      }
+    }
   }
 }
