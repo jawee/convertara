@@ -12,7 +12,7 @@ pipeline {
       steps {
         sh "dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.8.13"
         withSonarQubeEnv(installationName: 'SonarQube_Convertara', credentialsId: 'SonarQubeToken') {
-          sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"Convertara\" /d:sonar.cs.vscover.reportsPaths=\"**/coverage.cobertura.xml\" /d:sonar.cs.vstest.reportsPaths=\"**/*.trx\""
+          sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"Convertara\" /d:sonar.coverageReportPaths=\"./sonarqubecoverage/SonarQube.xml\" /d:sonar.cs.vstest.reportsPaths=\"**/*.trx\""
         }
       }
     }
@@ -28,11 +28,11 @@ pipeline {
       }
     }
 
-    // stage('Convert coverage to SonarQube') {
-    //   steps {
-    //     sh "reportgenerator \"-reports:src/Convertara.Test/TestResults/*/coverage.cobertura.xml" \"-targetdir:sonarqubecoverage\" \"-reporttypes:SonarQube\""
-    //   }
-    // }
+    stage('Convert coverage to SonarQube') {
+      steps {
+        sh "reportgenerator \"-reports:src/Convertara.Test/TestResults/*/coverage.cobertura.xml" \"-targetdir:sonarqubecoverage\" \"-reporttypes:SonarQube\""
+      }
+    }
 
     stage('Publish Coverage Report') {
       steps {
