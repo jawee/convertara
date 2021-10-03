@@ -10,7 +10,7 @@ pipeline {
         branch 'master'
       }
       steps {
-        //sh "dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.8.13"
+        sh "dotnet tool install dotnet-reportgenerator-globaltool --tool-path tools"
         withSonarQubeEnv(installationName: 'SonarQube_Convertara', credentialsId: 'SonarQubeToken') {
           sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"Convertara\" /d:sonar.coverageReportPaths=\"./sonarqubecoverage/SonarQube.xml\" /d:sonar.cs.vstest.reportsPaths=\"**/*.trx\""
         }
