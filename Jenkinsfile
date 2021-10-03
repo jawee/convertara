@@ -5,6 +5,15 @@ pipeline {
     scannerHome = tool 'SonarQubeMsBuild'
   }
   stages {
+    stage('Begin SonarQube analysis') {
+      when {
+        branch 'master'
+      }
+      steps {
+        withSonarQubeEnv(installationName: 'SonarQube_Convertara', credentialsId: 'SonarQubeToken') {
+          sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"Convertara\""
+      }
+    }
     stage('Build') {
       steps {
         dotnetBuild(project: 'src/Convertara.Core/Convertara.Core.csproj')
@@ -35,10 +44,9 @@ pipeline {
         branch 'master'
       }
       steps {
-        sh "echo ${scannerHome}"
         withSonarQubeEnv(installationName: 'SonarQube_Convertara', credentialsId: 'SonarQubeToken') {
-          sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"Convertara\""
-          sh "dotnet build src/Convertara.Core/Convertara.Core.csproj"
+          //sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"Convertara\""
+          //sh "dotnet build src/Convertara.Core/Convertara.Core.csproj"
           sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll end"
         }
       }
