@@ -30,7 +30,7 @@ pipeline {
 
     stage('Convert coverage to SonarQube') {
       steps {
-        sh "reportgenerator \"-reports:src/Convertara.Test/TestResults/*/coverage.cobertura.xml" \"-targetdir:sonarqubecoverage\" \"-reporttypes:SonarQube\""
+        sh 'reportgenerator "-reports:src/Convertara.Test/TestResults/*/coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"'
       }
     }
 
