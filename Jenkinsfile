@@ -34,6 +34,7 @@ pipeline {
         branch 'master'
       }
       steps {
+        sh "echo ${scannerHome}"
         withSonarQubeEnv(installationName: 'SonarQubeMsBuild', credentialsId: 'SonarQubeToken') {
           sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"Convertara\""
           sh "dotnet build src/Convertara.Core/Convertara.Core.csproj"
