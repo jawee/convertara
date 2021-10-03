@@ -35,20 +35,20 @@ namespace Convertara.Test
     [Test]
     public void TwitchService_GetToken_Returns_Token()
     {
-      Assert.AreEqual(_twitchService.GetToken(), "asdfasdfa");
+      Assert.AreEqual("asdfasdfa", _twitchService.GetToken());
     }
 
     [Test]
     public void TwitchService_GetIdForUsername_Returns_123()
     {
-      Assert.AreEqual(_twitchService.GetUserIdFromUsername("testusername"), "123");
+      Assert.AreEqual("123", _twitchService.GetUserIdFromUsername("testusername"));
     }
 
     [Test]
     public void TwitchService_GetVideosForUsername_Returns_Something()
     {
       var res = _twitchService.GetVideosForUsername("testusername");
-      Assert.AreEqual(res.First().UserName, "testusername");
+      Assert.AreEqual("testusername", res.First().UserName);
     }
 
     private static GetVideosResponse GetVideosResponse()
