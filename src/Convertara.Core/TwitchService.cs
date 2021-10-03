@@ -8,11 +8,11 @@ namespace Convertara.Core
 {
   public class TwitchService : ITwitchService
   {
-    private string _client_id; 
-    private string _client_secret;
+    private readonly string _client_id; 
+    private readonly string _client_secret;
     private string _token;
     private DateTime _expiration;
-    private ITwitchClient _httpClient;
+    private readonly ITwitchClient _httpClient;
 
     public TwitchService(ITwitchClient twitchClient, string clientId, string clientSecret)
     {
