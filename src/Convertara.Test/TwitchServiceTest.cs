@@ -51,7 +51,7 @@ namespace Convertara.Test
       Assert.AreEqual(res.First().UserName, "testusername");
     }
 
-    private GetVideosResponse GetVideosResponse()
+    private static GetVideosResponse GetVideosResponse()
     {
       var videosResponse = new GetVideosResponse();
       videosResponse.Data = new List<VideoDTO>();
@@ -77,7 +77,7 @@ namespace Convertara.Test
       return videosResponse;
     }
 
-    private GetAccessTokenResponse GetAccessTokenResponse()
+    private static GetAccessTokenResponse GetAccessTokenResponse()
     {
       var tokenResponse = new GetAccessTokenResponse();
       tokenResponse.AccessToken = "asdfasdfa";
@@ -88,7 +88,7 @@ namespace Convertara.Test
       return tokenResponse;
     }
 
-    private GetUsersResponse GetUsersResponse()
+    private static GetUsersResponse GetUsersResponse()
     {
       var usersResponse = new GetUsersResponse();
       usersResponse.Data = new List<UserDTO>();
