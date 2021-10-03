@@ -12,6 +12,7 @@ pipeline {
       steps {
         withSonarQubeEnv(installationName: 'SonarQube_Convertara', credentialsId: 'SonarQubeToken') {
           sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"Convertara\""
+        }
       }
     }
     stage('Build') {
