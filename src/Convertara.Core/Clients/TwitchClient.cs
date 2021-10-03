@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Security.Authentication;
 using System.Text;
 using Convertara.Core.DTO;
 using Newtonsoft.Json;
@@ -42,7 +43,7 @@ namespace Convertara.Core.Clients
                 if(authenticated)
                 {
                     if(token == null || token.Length == 0) {
-                    throw new Exception("No token ffs in MakePostRequest");
+                        throw new InvalidCredentialException("No token ffs in MakePostRequest");
                     }
                     httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
                     httpClient.DefaultRequestHeaders.Add("Client-Id", _clientId);
