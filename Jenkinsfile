@@ -10,8 +10,9 @@ pipeline {
         branch 'master'
       }
       steps {
+        sh "dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.8.13"
         withSonarQubeEnv(installationName: 'SonarQube_Convertara', credentialsId: 'SonarQubeToken') {
-          sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"Convertara\""
+          sh "dotnet ${scannerHome}/SonarScanner.MSBuild.dll begin /k:\"Convertara\" /d:sonar.cs.vscover.reportsPaths=\"**/coverage.cobertura.xml\" /d:sonar.cs.vstest.reportsPaths=\"**/*.trx\""
         }
       }
     }
@@ -26,6 +27,12 @@ pipeline {
         sh 'dotnet test src/Convertara.Test/Convertara.Test.csproj --collect:"XPlat Code Coverage" --logger trx'
       }
     }
+
+    // stage('Convert coverage to SonarQube') {
+    //   steps {
+    //     sh "reportgenerator \"-reports:src/Convertara.Test/TestResults/*/coverage.cobertura.xml" \"-targetdir:sonarqubecoverage\" \"-reporttypes:SonarQube\""
+    //   }
+    // }
 
     stage('Publish Coverage Report') {
       steps {
