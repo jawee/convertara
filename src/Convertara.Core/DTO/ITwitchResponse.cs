@@ -1,6 +1,6 @@
 namespace Convertara.Core.DTO
 {
-  public interface ITwitchResponse
-  {
-  }
+    public interface ITwitchResponse
+    {
+    }
 }

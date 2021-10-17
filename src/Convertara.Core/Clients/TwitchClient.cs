@@ -52,7 +52,7 @@ namespace Convertara.Core.Clients
                 var respParsed = JsonConvert.DeserializeObject<T>(respContent);
                 return respParsed;
             }
-        
+
         }
 
         private T MakeGetRequest<T>(string url, string token = null, bool authenticated = true)  where T : ITwitchResponse
@@ -66,7 +66,7 @@ namespace Convertara.Core.Clients
                     httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
                     httpClient.DefaultRequestHeaders.Add("Client-Id", _clientId);
                 }
-                
+
                 var resp = httpClient.GetAsync(url).Result;
                 var respParsed = JsonConvert.DeserializeObject<T>(resp.Content.ReadAsStringAsync().Result);
                 return respParsed;
