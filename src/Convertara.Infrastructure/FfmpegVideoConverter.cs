@@ -1,32 +1,27 @@
-using System;
 using System.Diagnostics;
-using System.IO;
+using Convertara.Core.Clients;
 
 namespace Convertara.Core
 {
-    public class VideoConverter
+    public class FfmpegVideoConverter : IVideoConverter
     {
         private static string ffmpegPath = "./src/lib/ffmpeg";
-        private readonly string _inputPath;
-        private readonly string _outputPath;
-        public VideoConverter(string inputPath, string outputPath) 
+        public FfmpegVideoConverter() 
         {
-            _inputPath = inputPath;
-            _outputPath = outputPath;
         }
 
-        public bool ConvertVideo()
+        public bool ConvertVideo(string inputPath, string outputPath)
         {
-            if(File.Exists(_outputPath))
+            if(File.Exists(outputPath))
             {
-                File.Delete(_outputPath);
+                File.Delete(outputPath);
             }
 
             if(!File.Exists(ffmpegPath))
             {
                 throw new FileNotFoundException("Cant find ffmpeg");
             }
-            var argStr = $"-i {_inputPath} -vcodec libx265 -crf 28 -r 30 {_outputPath}";
+            var argStr = $"-i {inputPath} -vcodec libx265 -crf 28 -r 30 {outputPath}";
 
             var psi = new ProcessStartInfo(ffmpegPath)
             {
