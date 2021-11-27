@@ -2,10 +2,11 @@ using System;
 using System.Net.Http;
 using System.Security.Authentication;
 using System.Text;
+using Convertara.Core.Clients;
 using Convertara.Core.DTO;
 using Newtonsoft.Json;
 
-namespace Convertara.Core.Clients
+namespace Convertara.Infrastructure.Clients
 {
     public class TwitchClient : ITwitchClient
     {

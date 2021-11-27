@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convertara.Core", "Converta
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convertara.Test", "Convertara.Test\Convertara.Test.csproj", "{67A522B8-C414-45B9-80F0-FDD6EB695B68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Convertara.Infrastructure", "Convertara.Infrastructure\Convertara.Infrastructure.csproj", "{AD750B73-3100-41C4-91A8-55FA03FC5DD9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{67A522B8-C414-45B9-80F0-FDD6EB695B68}.Release|x64.Build.0 = Release|Any CPU
 		{67A522B8-C414-45B9-80F0-FDD6EB695B68}.Release|x86.ActiveCfg = Release|Any CPU
 		{67A522B8-C414-45B9-80F0-FDD6EB695B68}.Release|x86.Build.0 = Release|Any CPU
+		{AD750B73-3100-41C4-91A8-55FA03FC5DD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD750B73-3100-41C4-91A8-55FA03FC5DD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD750B73-3100-41C4-91A8-55FA03FC5DD9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AD750B73-3100-41C4-91A8-55FA03FC5DD9}.Debug|x64.Build.0 = Debug|Any CPU
+		{AD750B73-3100-41C4-91A8-55FA03FC5DD9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AD750B73-3100-41C4-91A8-55FA03FC5DD9}.Debug|x86.Build.0 = Debug|Any CPU
+		{AD750B73-3100-41C4-91A8-55FA03FC5DD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD750B73-3100-41C4-91A8-55FA03FC5DD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD750B73-3100-41C4-91A8-55FA03FC5DD9}.Release|x64.ActiveCfg = Release|Any CPU
+		{AD750B73-3100-41C4-91A8-55FA03FC5DD9}.Release|x64.Build.0 = Release|Any CPU
+		{AD750B73-3100-41C4-91A8-55FA03FC5DD9}.Release|x86.ActiveCfg = Release|Any CPU
+		{AD750B73-3100-41C4-91A8-55FA03FC5DD9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

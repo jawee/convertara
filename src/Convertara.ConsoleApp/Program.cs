@@ -1,6 +1,6 @@
 ﻿using System;
 using Convertara.Core;
-using Convertara.Core.Clients;
+using Convertara.Infrastructure.Clients;
 using Microsoft.Extensions.Configuration;
 
 namespace Convertara.ConsoleApp
