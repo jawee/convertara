@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Convertara.Core.Clients;
 using Convertara.Core.DTO;
 
@@ -21,29 +22,29 @@ namespace Convertara.Core
             _httpClient = twitchClient;
         }
 
-        public ICollection<VideoDTO> GetVideosForUsername(string username) 
+        public async Task<ICollection<VideoDTO>> GetVideosForUsername(string username) 
         {
-            var userId = GetUserIdFromUsername(username);
-            var token = GetToken();
-            var respParsed = _httpClient.GetVideosForUserId(userId, token);
+            var userId = await GetUserIdFromUsername(username);
+            var token = await GetToken();
+            var respParsed = await _httpClient.GetVideosForUserId(userId, token);
             return respParsed.Data;
         }
 
-        public string GetUserIdFromUsername(string username) 
+        public async Task<string> GetUserIdFromUsername(string username) 
         {
-            var token = GetToken();
-            var respParsed = _httpClient.GetUserIdFromUsername(username, token);
+            var token = await GetToken();
+            var respParsed = await _httpClient.GetUserIdFromUsername(username, token);
             var userId = respParsed.Data.First().Id;
             return userId;
         }
 
-        public string GetToken() 
+        public async Task<string> GetToken() 
         {
             if(_token != null && _expiration > DateTime.Now.AddMinutes(1))
             {
                 return _token;
             }
-            var respParsed = _httpClient.GetToken(_client_id, _client_secret);
+            var respParsed = await _httpClient.GetToken(_client_id, _client_secret);
             _token = respParsed.AccessToken;
             _expiration = DateTime.Now.AddSeconds(respParsed.ExpiresIn);
             return _token;

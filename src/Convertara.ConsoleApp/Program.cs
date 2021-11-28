@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Convertara.Core;
 using Convertara.Infrastructure.Clients;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +12,7 @@ namespace Convertara.ConsoleApp
         private static string outputPath = "./output/output.mp4";
 
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             if(args.Length == 0) {
                 Console.WriteLine("No argument ffs. Setting to theprimeagen");
@@ -25,7 +26,7 @@ namespace Convertara.ConsoleApp
             // var convertVideoResult = new FfmpegVideoConverter().ConvertVideo(exampleFilePath, outputPath);
             var twitchClient = new TwitchClient();
             var twitchService = new TwitchService(twitchClient, clientId, clientSecret);
-            var videos = twitchService.GetVideosForUsername(args[0]);
+            var videos = await twitchService.GetVideosForUsername(args[0]);
 
             foreach(var video in videos) 
             {
