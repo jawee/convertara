@@ -29,6 +29,9 @@ pipeline {
     }
 
     stage('Convert coverage to SonarQube') {
+      when {
+        branch 'master'
+      }
       steps {
         sh './tools/reportgenerator "-reports:src/Convertara.Test/TestResults/*/coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"'
       }
