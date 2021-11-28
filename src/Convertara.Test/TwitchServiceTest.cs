@@ -7,6 +7,7 @@ using Convertara.Core.Clients;
 using System;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace Convertara.Test
 {
@@ -40,25 +41,27 @@ namespace Convertara.Test
         }
 
         [Test]
-        public void TwitchService_GetToken_Returns_Token()
+        public async Task TwitchService_GetToken_Returns_Token()
         {
-            Assert.AreEqual("asdfasdfa", _twitchService.GetToken());
+            var token = await _twitchService.GetToken();
+            Assert.AreEqual("asdfasdfa", token);
         }
 
         [Test]
-        public void TwitchService_GetIdForUsername_Returns_123()
+        public async Task TwitchService_GetIdForUsername_Returns_123()
         {
-            Assert.AreEqual("123", _twitchService.GetUserIdFromUsername("testusername"));
+            var userId = await _twitchService.GetUserIdFromUsername("testusername");
+            Assert.AreEqual("123", userId);
         }
 
         [Test]
-        public void TwitchService_GetVideosForUsername_Returns_Something()
+        public async Task TwitchService_GetVideosForUsername_Returns_Something()
         {
-            var res = _twitchService.GetVideosForUsername("testusername");
+            var res = await _twitchService.GetVideosForUsername("testusername");
             Assert.AreEqual("testusername", res.First().UserName);
         }
 
-        private static GetVideosResponse GetVideosResponse()
+        private static Task<GetVideosResponse> GetVideosResponse()
         {
             var videosResponse = new GetVideosResponse();
             videosResponse.Data = new List<VideoDTO>();
@@ -81,10 +84,10 @@ namespace Convertara.Test
             videoDto.Duration = "1h45m44s";
             videoDto.MutedSegments = null;
             videosResponse.Data.Add(videoDto);
-            return videosResponse;
+            return Task.FromResult(videosResponse);
         }
 
-        private static GetAccessTokenResponse GetAccessTokenResponse()
+        private static Task<GetAccessTokenResponse> GetAccessTokenResponse()
         {
             var tokenResponse = new GetAccessTokenResponse();
             tokenResponse.AccessToken = "asdfasdfa";
@@ -92,17 +95,17 @@ namespace Convertara.Test
             tokenResponse.RefreshToken = "asdfasf";
             tokenResponse.Scope = new List<string>{"scope1", "scope2"};
             tokenResponse.TokenType = "client";
-            return tokenResponse;
+            return Task.FromResult(tokenResponse);
         }
 
-        private static GetUsersResponse GetUsersResponse()
+        private static Task<GetUsersResponse> GetUsersResponse()
         {
             var usersResponse = new GetUsersResponse();
             usersResponse.Data = new List<UserDTO>();
             var userDto = new UserDTO();
             userDto.Id = "123";
             usersResponse.Data.Add(userDto);
-            return usersResponse;
+            return Task.FromResult(usersResponse);
         }
     }
 }

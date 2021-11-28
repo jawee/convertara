@@ -31,11 +31,11 @@
 @code {
     private string Username;
     private ICollection<VideoDTO> videos;
-    private void Search()
+    private async Task Search()
     {
         if (!string.IsNullOrEmpty(Username))
         {
-            videos = _twitchService.GetVideosForUsername(Username);
+            videos = await _twitchService.GetVideosForUsername(Username);
         }
     }
 }

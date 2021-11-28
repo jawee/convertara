@@ -1,11 +1,12 @@
+using System.Threading.Tasks;
 using Convertara.Core.DTO;
 
 namespace Convertara.Core.Clients
 {
     public interface ITwitchClient
     {
-        GetVideosResponse GetVideosForUserId(string userId, string token);
-        GetUsersResponse GetUserIdFromUsername(string username, string token);
-        GetAccessTokenResponse GetToken(string clientId, string clientSecret);
+        Task<GetVideosResponse> GetVideosForUserId(string userId, string token);
+        Task<GetUsersResponse> GetUserIdFromUsername(string username, string token);
+        Task<GetAccessTokenResponse> GetToken(string clientId, string clientSecret);
     }
 }

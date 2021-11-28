@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Convertara.Core.DTO;
 
 namespace Convertara.Core
 {
     public interface ITwitchService
     {
-        ICollection<VideoDTO> GetVideosForUsername(string username);
-        string GetUserIdFromUsername(string username);
-        string GetToken();
+        Task<ICollection<VideoDTO>> GetVideosForUsername(string username);
+        Task<string> GetUserIdFromUsername(string username);
+        Task<string> GetToken();
     }
 }

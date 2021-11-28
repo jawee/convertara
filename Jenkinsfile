@@ -38,6 +38,9 @@ pipeline {
     }
 
     stage('Publish Coverage Report') {
+      when {
+        branch 'master'
+      }
       steps {
         cobertura(coberturaReportFile: '**/coverage.cobertura.xml')
         xunit(
