@@ -1,24 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using Convertara.Core.Clients;
 using Convertara.Core.DTO;
+using Convertara.Core.Utilities;
+using Microsoft.Extensions.Configuration;
 
 namespace Convertara.Core
 {
     public class TwitchService : ITwitchService
     {
-        private readonly string _client_id; 
-        private readonly string _client_secret;
+        private readonly string _clientId; 
+        private readonly string _clientSecret;
         private string _token;
         private DateTime _expiration;
         private readonly ITwitchClient _httpClient;
 
-        public TwitchService(ITwitchClient twitchClient, string clientId, string clientSecret)
+        public TwitchService(ITwitchClient twitchClient, IConfiguration configuration)
         {
-            _client_id = clientId;
-            _client_secret = clientSecret;
+           Guard.IsNullCheck(twitchClient, nameof(twitchClient)); 
+           Guard.IsNullCheck(configuration, nameof(configuration));
             _httpClient = twitchClient;
+            _clientId = configuration["twitch_client_id"];
+            _clientSecret = configuration["twitch_client_secret"];
         }
 
         public ICollection<VideoDTO> GetVideosForUsername(string username) 
@@ -43,7 +48,7 @@ namespace Convertara.Core
             {
                 return _token;
             }
-            var respParsed = _httpClient.GetToken(_client_id, _client_secret);
+            var respParsed = _httpClient.GetToken(_clientId, _clientSecret);
             _token = respParsed.AccessToken;
             _expiration = DateTime.Now.AddSeconds(respParsed.ExpiresIn);
             return _token;

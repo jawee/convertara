@@ -1,0 +1,53 @@
+﻿@page "/fetchdata"
+
+<PageTitle>Weather forecast</PageTitle>
+
+@using Convertara.Gui.Data
+@using Convertara.Core
+@using Convertara.Core.DTO
+@inject WeatherForecastService ForecastService
+@inject ITwitchService _twitchService
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Duration</th>
+                <th>Published At</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var video in videos)
+        {
+            <tr>
+                <td>@video.Title</td>
+                <td>@video.Duration</td>
+                <td>@video.PublishedAt</td>
+                <td>@video.CreatedAt</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private WeatherForecast[]? forecasts;
+    private ICollection<VideoDTO> videos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        videos =  _twitchService.GetVideosForUsername("theprimeagen");
+    }
+}
