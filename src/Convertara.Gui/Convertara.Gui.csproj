@@ -11,4 +11,8 @@
     <ProjectReference Include="..\Convertara.Infrastructure\Convertara.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data" />
+  </ItemGroup>
+
 </Project>

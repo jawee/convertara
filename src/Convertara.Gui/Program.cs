@@ -1,8 +1,5 @@
 using Convertara.Core;
 using Convertara.Core.Clients;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Convertara.Gui.Data;
 using Convertara.Infrastructure.Clients;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,9 +9,8 @@ var clientSecret = config["twitch_client_secret"];
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTransient<ITwitchService, TwitchService>();
-builder.Services.AddTransient<ITwitchClient, TwitchClient>(); //TODO add clientId and clientSecret
+builder.Services.AddTransient<ITwitchClient, TwitchClient>();
 // services.AddSingleton<IMyInterface, MyInterface>();
 // services.AddSingleton<ICacheProvider>(provider => 
 //     RedisCacheProvider("myPrettyLocalhost:6379", provider.GetService<IMyInterface>()));
