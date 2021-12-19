@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Convertara.Core.DTO
+namespace Convertara.Core.Dto
 {
 
-    public class VideoDTO 
+    public class VideoDto 
     {
         [JsonProperty("id")]
         public string Id { get; set; }

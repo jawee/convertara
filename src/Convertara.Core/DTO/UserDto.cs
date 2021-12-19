@@ -1,10 +1,10 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Convertara.Core.DTO
+namespace Convertara.Core.Dto
 {
 
-    public class UserDTO 
+    public class UserDto 
     {
         [JsonProperty("id")]
         public string Id { get; set; }

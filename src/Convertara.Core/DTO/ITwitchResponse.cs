@@ -1,4 +1,4 @@
-namespace Convertara.Core.DTO
+namespace Convertara.Core.Dto
 {
     public interface ITwitchResponse
     {

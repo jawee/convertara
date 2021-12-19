@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Convertara.Core.DTO
+namespace Convertara.Core.Dto
 {
     public class GetAccessTokenResponse : ITwitchResponse
     {

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Convertara.Core.DTO
+namespace Convertara.Core.Dto
 {
 
     public class GetUsersResponse : ITwitchResponse
     {
         [JsonProperty("data")]
-        public List<UserDTO> Data {get;set;}
+        public List<UserDto> Data {get;set;}
     }
 }

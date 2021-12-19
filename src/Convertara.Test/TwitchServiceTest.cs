@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Convertara.Core;
 using Moq;
-using Convertara.Core.DTO;
+using Convertara.Core.Dto;
 using System.Collections.Generic;
 using Convertara.Core.Clients;
 using System;
@@ -57,8 +57,8 @@ namespace Convertara.Test
         private static Task<GetVideosResponse> GetVideosResponse()
         {
             var videosResponse = new GetVideosResponse();
-            videosResponse.Data = new List<VideoDTO>();
-            var videoDto = new VideoDTO();
+            videosResponse.Data = new List<VideoDto>();
+            var videoDto = new VideoDto();
             videoDto.Id = "1128218457";
             videoDto.StreamId = "43405788957";
             videoDto.UserId = "167160215";
@@ -94,8 +94,8 @@ namespace Convertara.Test
         private static Task<GetUsersResponse> GetUsersResponse()
         {
             var usersResponse = new GetUsersResponse();
-            usersResponse.Data = new List<UserDTO>();
-            var userDto = new UserDTO();
+            usersResponse.Data = new List<UserDto>();
+            var userDto = new UserDto();
             userDto.Id = "123";
             usersResponse.Data.Add(userDto);
             return Task.FromResult(usersResponse);

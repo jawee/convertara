@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Convertara.Core.DTO
+namespace Convertara.Core.Dto
 {
     public class Pagination
     {
@@ -12,7 +12,7 @@ namespace Convertara.Core.DTO
     public class GetVideosResponse : ITwitchResponse
     {
         [JsonProperty("data")]
-        public List<VideoDTO> Data {get;set;}
+        public List<VideoDto> Data {get;set;}
         [JsonProperty("pagination")]
         public Pagination Pagination {get;set;}
     }

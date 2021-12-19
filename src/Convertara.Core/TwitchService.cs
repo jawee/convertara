@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Convertara.Core.Clients;
-using Convertara.Core.DTO;
+using Convertara.Core.Dto;
 
 namespace Convertara.Core
 {
@@ -22,7 +22,7 @@ namespace Convertara.Core
             _httpClient = twitchClient;
         }
 
-        public async Task<ICollection<VideoDTO>> GetVideosForUsername(string username) 
+        public async Task<ICollection<VideoDto>> GetVideosForUsername(string username) 
         {
             var userId = await GetUserIdFromUsername(username);
             var token = await GetToken();
