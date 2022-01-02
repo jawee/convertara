@@ -10,7 +10,7 @@ namespace Convertara.Infrastructure.Clients
 {
     public class TwitchClient : ITwitchClient
     {
-        private string _clientId;
+        private string? _clientId;
 
         public TwitchClient()
         {
@@ -36,7 +36,7 @@ namespace Convertara.Infrastructure.Clients
             var respParsed = await MakePostRequest<GetAccessTokenResponse>(authUrl, "", null, false);
             return respParsed;
         }
-        private async Task<T> MakePostRequest<T>(string url, string data, string token = null, bool authenticated = true) where T : ITwitchResponse
+        private async Task<T> MakePostRequest<T>(string url, string data, string? token = null, bool authenticated = true) where T : ITwitchResponse
         {
             using(var httpClient = new HttpClient())
             {
@@ -56,7 +56,7 @@ namespace Convertara.Infrastructure.Clients
 
         }
 
-        private async Task<T> MakeGetRequest<T>(string url, string token = null, bool authenticated = true)  where T : ITwitchResponse
+        private async Task<T> MakeGetRequest<T>(string url, string? token = null, bool authenticated = true)  where T : ITwitchResponse
         {
             using(var httpClient = new HttpClient())
             {

@@ -30,7 +30,7 @@ namespace Convertara.ConsoleApp
 
             foreach(var video in videos) 
             {
-                Console.WriteLine($"Title: '{video.Title}' Broadcasted: '{video.CreatedAt}'");
+                Console.WriteLine($"Id: '{video.Id}' Title: '{video.Title}' Broadcasted: '{video.CreatedAt}' Duration: '{video.Duration}'");
             }
         }
     }

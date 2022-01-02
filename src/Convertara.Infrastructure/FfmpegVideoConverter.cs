@@ -6,9 +6,6 @@ namespace Convertara.Core
     public class FfmpegVideoConverter : IVideoConverter
     {
         private static string ffmpegPath = "./src/lib/ffmpeg";
-        public FfmpegVideoConverter() 
-        {
-        }
 
         public bool ConvertVideo(string inputPath, string outputPath)
         {
