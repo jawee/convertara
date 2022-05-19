@@ -20,12 +20,10 @@ namespace Convertara.ConsoleApp
             }
 
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            var clientId = config["twitch_client_id"];
-            var clientSecret = config["twitch_client_secret"];
 
             // var convertVideoResult = new FfmpegVideoConverter().ConvertVideo(exampleFilePath, outputPath);
             var twitchClient = new TwitchClient();
-            var twitchService = new TwitchService(twitchClient, clientId, clientSecret);
+            var twitchService = new TwitchService(twitchClient, config);
             var videos = await twitchService.GetVideosForUsername(args[0]);
 
             foreach(var video in videos) 

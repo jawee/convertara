@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Convertara.Core.Clients;
 using System;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 
 namespace Convertara.Test
@@ -17,6 +18,12 @@ namespace Convertara.Test
         [SetUp]
         public void Setup()
         {
+            var inMemoryConfig = new Dictionary<string, string>
+            {
+                {"twitch_client_id", "superclientid"},
+                {"twitch_client_secret", "supersecretclientsecret"}
+            };
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection(inMemoryConfig).Build();
             var tokenResponse = GetAccessTokenResponse();
             var mockTwitchClient = new Mock<ITwitchClient>();
             mockTwitchClient.Setup(twitchClient => 
@@ -30,7 +37,7 @@ namespace Convertara.Test
                     twitchClient.GetVideosForUserId(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(() => GetVideosResponse());
 
-            _twitchService = new TwitchService(mockTwitchClient.Object, "clientid", "clientsecret");
+            _twitchService = new TwitchService(mockTwitchClient.Object, configuration);
         }
 
         [Test]

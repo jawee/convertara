@@ -1,0 +1,41 @@
+@page "/videosearch"
+@using Convertara.Core.DTO
+@using Convertara.Core
+@inject ITwitchService _twitchService
+<h3>VideoSearch</h3>
+<input type="text" name="Username" @bind="Username" placeholder="Username"> 
+<input type="submit" value="Search" onclick="@Search">
+
+@if(videos != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Duration</th>
+                <th>Published At</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var video in videos)
+        {
+            <tr>
+                <td>@video.Title</td>
+                <td>@video.Duration</td>
+                <td>@video.PublishedAt</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+@code {
+    private string Username;
+    private ICollection<VideoDTO> videos;
+    private async Task Search()
+    {
+        if (!string.IsNullOrEmpty(Username))
+        {
+            videos = await _twitchService.GetVideosForUsername(Username);
+        }
+    }
+}
